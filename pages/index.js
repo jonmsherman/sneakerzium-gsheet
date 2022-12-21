@@ -11,14 +11,14 @@ const columns = [
     dataIndex: "sku",
     key: "sku",
   },
-  {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
-    render: (image) => {
-      if (image) return <img style={{ height: 75, width: 75 }} src={image} />;
-    },
-  },
+  // {
+  //   title: "Image",
+  //   dataIndex: "image",
+  //   key: "image",
+  //   render: (image) => {
+  //     if (image) return <img style={{ height: 75, width: 75 }} src={image} />;
+  //   },
+  // },
   {
     title: "Name",
     dataIndex: "name",

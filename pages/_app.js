@@ -1,5 +1,5 @@
 import "antd/dist/reset.css";
-import { Layout, Menu, theme } from "antd";
+import { Layout } from "antd";
 
 export default function App({ Component, pageProps }) {
   return (
