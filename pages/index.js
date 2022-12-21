@@ -1,48 +1,15 @@
-import { Input } from "antd";
-import { Table } from "antd";
+import { Input, Image, Table, Space } from "antd";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { EyeOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
-
-const columns = [
-  {
-    title: "Sku",
-    dataIndex: "sku",
-    key: "sku",
-  },
-  // {
-  //   title: "Image",
-  //   dataIndex: "image",
-  //   key: "image",
-  //   render: (image) => {
-  //     if (image) return <img style={{ height: 75, width: 75 }} src={image} />;
-  //   },
-  // },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-  },
-  {
-    title: "Size",
-    dataIndex: "size",
-    key: "size",
-    sorter: (a, b) => a.size - b.size,
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-    sorter: (a, b) => a.price - b.price,
-  },
-];
 
 export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [currentImageVisible, setCurrentImageVisible] = useState(null);
   const router = useRouter();
   const { query } = router.query;
 
@@ -67,6 +34,56 @@ export default function Home() {
     }
     setIsSearching(false);
   };
+
+  const columns = [
+    {
+      title: "Sku",
+      dataIndex: "sku",
+      key: "sku",
+    },
+    {
+      title: "Name",
+      key: "name",
+      sorter: (a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+      render: (shoe) => {
+        const image = shoe.image;
+        if (image)
+          return (
+            <Space>
+              {shoe.name}
+              <EyeOutlined onClick={() => setCurrentImageVisible(shoe.sku)} />
+              <Image
+                width={200}
+                style={{ display: "none" }}
+                src={image}
+                preview={{
+                  visible: currentImageVisible === shoe.sku,
+                  scaleStep: 0.25,
+                  src: image,
+                  onVisibleChange: (value) => {
+                    setCurrentImageVisible(null);
+                  },
+                }}
+              />
+            </Space>
+          );
+        return shoe.name;
+      },
+    },
+    {
+      title: "Size",
+      dataIndex: "size",
+      key: "size",
+      sorter: (a, b) => a.size - b.size,
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      sorter: (a, b) => a.price - b.price,
+    },
+  ];
 
   return (
     <>
