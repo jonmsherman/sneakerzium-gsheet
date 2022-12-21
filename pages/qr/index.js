@@ -7,7 +7,7 @@ const { Search } = Input;
 const sneakerZiumUrl = "https://sneakerzium-gsheet.vercel.app";
 
 const Qr = () => {
-  const [qrStatus, setQrStatus] = useState("active");
+  const [qrStatus, setQrStatus] = useState("expired");
   const [qrValue, setQrValue] = useState(sneakerZiumUrl);
   const generateQrCode = async (query) => {
     setQrStatus("loading");
