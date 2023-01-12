@@ -52,20 +52,7 @@ export default function Home() {
           return (
             <Space>
               {shoe.name}
-              <EyeOutlined onClick={() => setCurrentImageVisible(shoe.sku)} />
-              <Image
-                width={200}
-                style={{ display: "none" }}
-                src={image}
-                preview={{
-                  visible: currentImageVisible === shoe.sku,
-                  scaleStep: 0.25,
-                  src: image,
-                  onVisibleChange: (value) => {
-                    setCurrentImageVisible(null);
-                  },
-                }}
-              />
+              <Image width={50} src={image} />
             </Space>
           );
         return shoe.name;
