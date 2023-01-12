@@ -47,7 +47,9 @@ export default async function handler(req, res) {
 
   if (!searchQuery) return res.status(200).json(shoes);
 
-  shoes = shoes.filter((shoe) => shoe.name.toLowerCase().includes(searchQuery));
+  shoes =
+    shoes.filter((shoe) => shoe.name.toLowerCase().includes(searchQuery) ||
+    shoe.sku.toLowerCase().includes(searchQuery));
 
   return res.status(200).json(shoes);
 }
