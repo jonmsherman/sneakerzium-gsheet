@@ -23,9 +23,9 @@ export default async function handler(req, res) {
   let shoes = [];
   const { query } = req;
 
-  if (!query?.search) return res.status(200).json([]);
+  // if (!query?.search) return res.status(200).json([]);
 
-  const searchQuery = query.search.toLowerCase();
+  const searchQuery = query.search?.toLowerCase();
 
   const doc = await connectToGSheet();
   await doc.loadInfo(); // loads document properties and worksheets
