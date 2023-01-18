@@ -89,7 +89,6 @@ export default function Home() {
         columns={columns}
         dataSource={searchResults}
         loading={isSearching}
-        pagination={false}
       />
     </>
   );
