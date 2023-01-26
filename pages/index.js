@@ -1,4 +1,4 @@
-import { Input, Image, Table, Space } from "antd";
+import { Input, Image, Table, Space, Button } from "antd";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -9,7 +9,6 @@ const { Search } = Input;
 export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [currentImageVisible, setCurrentImageVisible] = useState(null);
   const router = useRouter();
   const { query } = router.query;
 
@@ -74,16 +73,21 @@ export default function Home() {
 
   return (
     <>
-      <Search
-        allowClear
-        enterButton="Search"
-        size="large"
-        onSearch={(query) => {
-          if (!query) return;
-          search(query);
-        }}
-        style={{ marginBottom: 16 }}
-      />
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <Search
+          allowClear
+          enterButton="Search"
+          size="large"
+          onSearch={(query) => {
+            if (!query) return;
+            search(query);
+          }}
+        />
+        <Button type="primary" size="large">
+          Filter
+        </Button>
+      </div>
+
       <Table
         columns={columns}
         dataSource={searchResults}
