@@ -13,6 +13,10 @@ export default function Home() {
   const { query } = router.query;
 
   useEffect(() => {
+    search("");
+  }, []);
+
+  useEffect(() => {
     if (query) search(query);
   }, [query]);
 
@@ -78,10 +82,7 @@ export default function Home() {
           allowClear
           enterButton="Search"
           size="large"
-          onSearch={(query) => {
-            if (!query) return;
-            search(query);
-          }}
+          onSearch={(query) => search(query)}
         />
         <Button type="primary" size="large">
           Filter
@@ -92,7 +93,6 @@ export default function Home() {
         columns={columns}
         dataSource={searchResults}
         loading={isSearching}
-        pagination={false}
       />
     </>
   );

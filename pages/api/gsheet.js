@@ -23,10 +23,6 @@ export default async function handler(req, res) {
   let shoes = [];
   const { query } = req;
 
-  if (!query?.search) return res.status(200).json([]);
-
-  const searchQuery = query.search.toLowerCase();
-
   const doc = await connectToGSheet();
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
@@ -39,17 +35,20 @@ export default async function handler(req, res) {
         name: row.Shoe,
         sold: row.Sold,
         size: row.Size,
-        price: row.Cost,
+        price: row['List Price'],
         image: row.Image,
       });
     }
   });
 
+  const searchQuery = query.search?.toLowerCase();
   if (!searchQuery) return res.status(200).json(shoes);
 
-  shoes =
-    shoes.filter((shoe) => shoe.name.toLowerCase().includes(searchQuery) ||
-    shoe.sku.toLowerCase().includes(searchQuery));
+  shoes = shoes.filter(
+    (shoe) =>
+      shoe.name.toLowerCase().includes(searchQuery) ||
+      shoe.sku.toLowerCase().includes(searchQuery)
+  );
 
   return res.status(200).json(shoes);
 }
