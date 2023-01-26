@@ -35,14 +35,16 @@ export default async function handler(req, res) {
         name: row.Shoe,
         sold: row.Sold,
         size: row.Size,
-        price: row['List Price'],
+        price: row["List Price"],
         image: row.Image,
       });
     }
   });
 
-  const searchQuery = query.search?.toLowerCase();
-  if (!searchQuery) return res.status(200).json(shoes);
+  let searchQuery = query.search?.toLowerCase();
+  let sizesFilter = query.sizes;
+
+  if (!searchQuery) searchQuery = "";
 
   shoes = shoes.filter(
     (shoe) =>
@@ -50,5 +52,23 @@ export default async function handler(req, res) {
       shoe.sku.toLowerCase().includes(searchQuery)
   );
 
-  return res.status(200).json(shoes);
+  if (sizesFilter && JSON.parse(sizesFilter)) {
+    const parsedSizesFilter = JSON.parse(sizesFilter);
+    if (parsedSizesFilter && Array.isArray(parsedSizesFilter)) {
+      shoes = shoes.filter((shoe) => {
+        return parsedSizesFilter.includes(shoe.size);
+      });
+    }
+  }
+
+  const sizes = shoes.reduce((group, { size }) => {
+    group[size] = (group[size] || 0) + 1;
+    return group;
+  }, {});
+
+  let sizeArray = [];
+  for (const [size, total] of Object.entries(sizes)) {
+    sizeArray.push({ size, total });
+  }
+  return res.status(200).json({ shoes, sizes: sizeArray });
 }

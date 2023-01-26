@@ -3,35 +3,45 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { EyeOutlined } from "@ant-design/icons";
+import FilterDrawer from "../components/filter-drawer/FilterDrawer";
 
 const { Search } = Input;
 
 export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(null);
+  const [shoes, setShoes] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
   const { query } = router.query;
 
   useEffect(() => {
-    search("");
-  }, []);
-
-  useEffect(() => {
-    if (query) search(query);
+    if (query) setSearchQuery(query);
   }, [query]);
 
-  const search = async (searchQuery) => {
+  useEffect(() => {
+    search();
+  }, [searchQuery]);
+
+  const search = async (sizesFilter) => {
     setIsSearching(true);
-    setSearchResults(null);
+    setShoes([]);
+    setSizes([]);
     try {
       let url = "/api/gsheet";
 
       if (searchQuery) {
         url += `?search=${searchQuery}`;
+
+        if (sizesFilter) url += `&sizes=${JSON.stringify(sizesFilter)}`;
+      } else {
+        if (sizesFilter) url += `?sizes=${JSON.stringify(sizesFilter)}`;
       }
       const { data } = await axios.get(url);
-      console.log(data);
-      setSearchResults(data);
+      const { shoes, sizes } = data;
+      setShoes(shoes);
+      setSizes(sizes);
     } catch (err) {
       console.log(err);
     }
@@ -82,17 +92,30 @@ export default function Home() {
           allowClear
           enterButton="Search"
           size="large"
-          onSearch={(query) => search(query)}
+          onSearch={(query) => setSearchQuery(query)}
         />
-        <Button type="primary" size="large">
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => setIsDrawerOpen(true)}
+        >
           Filter
         </Button>
       </div>
-
       <Table
         columns={columns}
-        dataSource={searchResults}
+        dataSource={shoes}
         loading={isSearching}
+        pagination={{
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+        }}
+      />
+      <FilterDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        sizes={sizes}
+        onFilter={(sizes) => search(sizes)}
       />
     </>
   );
