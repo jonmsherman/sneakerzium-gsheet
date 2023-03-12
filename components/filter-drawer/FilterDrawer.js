@@ -7,11 +7,11 @@ const FilterDrawer = ({ isOpen, onClose, sizes, onFilter }) => {
   const [checked, setChecked] = useState([]);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    if (sizes && isOpen) {
-      setChecked(sizes);
-    }
-  }, [isOpen, sizes]);
+  // useEffect(() => {
+  //   if (sizes && isOpen) {
+  //     setChecked(sizes);
+  //   }
+  // }, [isOpen, sizes]);
 
   useEffect(() => {
     if (checked) {
